@@ -1,0 +1,41 @@
+#!/bin/sh
+
+this="`readlink -f "$0"`"
+cd "`dirname "$this"`"
+
+default='Default'
+prof_list='/apps/gnome-terminal/global/profile_list'
+
+change_profile() {
+	file="`mktemp`"
+	gconftool-2 --dump "/apps/gnome-terminal/profiles/$2" | sed "s,profiles/$2,profiles/$1,g" > "$file"
+	gconftool-2 --load "$file"
+	gconftool-2 --type string --set "/apps/gnome-terminal/profiles/$1/visible_name" "$1"
+	rm -f -- "$file"
+}
+
+create_profile() {
+	gconftool-2 --type list --list-type string --set $prof_list "`gconftool-2 --get $prof_list | sed "s/]/,$1]/"`"
+	change_profile "$1" "$2"
+}
+
+delete_profile() {
+	gconftool-2 --type list --list-type string --set $prof_list "`gconftool-2 --get $prof_list | sed "s/$1//;s/\[,/[/;s/,,/,/;s/,]/]/"`"
+	gconftool-2 --unset "/apps/gnome-terminal/profiles/$1"
+}
+
+
+if [ -n "$1" ]; then
+	case "$1" in
+		--change)
+			change_profile "$2" "$3"
+			;;
+		--delete)
+			delete_profile "$2"
+			;;
+	esac
+else
+	prof="`mktemp -u HACK_PROFILE_XXXXXXXXXX`"
+	create_profile "$prof" "$default"
+	gnome-terminal --window-with-profile="$prof" -x sh -c "export __TERM_PROF='$prof' && export __PROF_CHANGE='$this' && bash -i && '$this' --delete '$prof'"
+fi
