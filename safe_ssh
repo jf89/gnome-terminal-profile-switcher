@@ -1,0 +1,35 @@
+#!/bin/bash
+
+
+# To use this script, you should put it into your ~/bin and
+# add the line "alias ssh='/home/<you>/bin/safe_ssh'"
+
+
+# Exit if the environment variables aren't set
+if [ -z "$__TERM_PROF" ] || [ -z "$__PROF_CHANGE" ]; then
+	cat >&2 <<-EOF
+		*********************************************************************************
+		WARNING: PROFILE SWITCHER IS NOT WORKING
+		*********************************************************************************
+	EOF
+	ssh $@
+fi
+
+# Get the last argument - guess that the last argument is the hostname
+last="${@: -1}"
+
+# Default profile to use if we don't specifically recognise the host
+profile='Profile4'
+
+# Select profile1 for staging
+[[ "$last" =~ "staging" ]] && profile='Profile1'
+# Select profile2 for the database
+[[ "$last" =~ "db" ]] && profile='Profile2'
+# Select profile3 for production
+[[ "$last" =~ "production" ]] && profile='Profile3'
+
+"$__PROF_CHANGE" --change "$__TERM_PROF" "$profile"
+
+ssh $@
+
+"$__PROF_CHANGE" --change "$__TERM_PROF" 'Default'
