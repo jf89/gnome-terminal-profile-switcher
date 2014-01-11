@@ -20,18 +20,19 @@ for your own reference.
 
 e.g.
 
-<logical>  <gnome internal>
+<pre>
+&lt;logical&gt;  &lt;gnome internal&gt;
 default    Default
 database   Profile0
 production Profile1
 staging    Profile2
-
+</pre>
 
 Now you have a list of profiles you can swap between, you can create a gnome-terminal by running the "term"
 script with no arguments. This will create a gnome-terminal with a new, temporary profile, and inject two
-environment variables: __TERM_PROF and __PROF_CHANGE. These allow you to change the profile of the terminal
+environment variables: \_\_TERM\_PROF and \_\_PROF\_CHANGE. These allow you to change the profile of the terminal
 by running:
 
-"$__PROF_CHANGE" --change "$__TERM_PROF" <profile to change to>
+`"$__PROF_CHANGE" --change "$__TERM_PROF" <profile to change to>`
 
 The term script can be placed in your ~/bin, and you can bind your terminal shortcut(s) to run this script.
