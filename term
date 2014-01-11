@@ -37,5 +37,5 @@ if [ -n "$1" ]; then
 else
 	prof="`mktemp -u HACK_PROFILE_XXXXXXXXXX`"
 	create_profile "$prof" "$default"
-	gnome-terminal --window-with-profile="$prof" -x sh -c "export __TERM_PROF='$prof' && export __PROF_CHANGE='$this' && bash -i && '$this' --delete '$prof'"
+	gnome-terminal --window-with-profile="$prof" -x sh -c "export __TERM_PROF='$prof' && export __PROF_CHANGE='$this' && '$SHELL' && '$this' --delete '$prof'"
 fi
