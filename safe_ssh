@@ -12,7 +12,7 @@ if [ -z "$__TERM_PROF" ] || [ -z "$__PROF_CHANGE" ]; then
 		WARNING: PROFILE SWITCHER IS NOT WORKING
 		*********************************************************************************
 	EOF
-	exec ssh $@
+	exec /usr/bin/ssh $@
 fi
 
 # Get the last argument - guess that the last argument is the hostname
@@ -30,6 +30,6 @@ profile='Profile4'
 
 "$__PROF_CHANGE" --change "$__TERM_PROF" "$profile"
 
-ssh $@
+/usr/bin/ssh $@
 
 "$__PROF_CHANGE" --change "$__TERM_PROF" 'Default'
