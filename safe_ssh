@@ -28,6 +28,10 @@ profile='Profile4'
 # Select profile3 for production
 [[ "$last" =~ "production" ]] && profile='Profile3'
 
+#Makes sure that if ssh login is interrupted with Ctrl+C, the colors
+#go back to normal
+trap '"$__PROF_CHANGE" --change "$__TERM_PROF" "Default"' SIGINT
+
 "$__PROF_CHANGE" --change "$__TERM_PROF" "$profile"
 
 /usr/bin/ssh $@
